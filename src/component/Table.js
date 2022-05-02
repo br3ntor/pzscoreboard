@@ -128,14 +128,16 @@ export default function EnhancedTable() {
     getPlayerData().then((player) => {
       const currentRows = [];
       player.forEach((p) => {
-        currentRows.push({
-          name: p.name,
-          kills: JSON.parse(p.stats).kills,
-          survived: JSON.parse(p.stats).hours,
-          health: JSON.parse(p.health).health,
-          infected: JSON.parse(p.health).infected ? "Yes" : "No",
-          prof: JSON.parse(p.stats).profession,
-        });
+        if (p.name !== "FLUX") {
+          currentRows.push({
+            name: p.name,
+            kills: JSON.parse(p.stats).kills,
+            survived: JSON.parse(p.stats).hours,
+            health: JSON.parse(p.health).health,
+            infected: JSON.parse(p.health).infected ? "Yes" : "No",
+            prof: JSON.parse(p.stats).profession,
+          });
+        }
       });
       setRows(currentRows);
       console.log(player);
