@@ -9,8 +9,6 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Paper from "@mui/material/Paper";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
 
 async function getPlayerData() {
   const data = await fetch(process.env.REACT_APP_PZAPI);
@@ -111,7 +109,6 @@ EnhancedTableHead.propTypes = {
 export default function EnhancedTable() {
   const [order, setOrder] = useState("desc");
   const [orderBy, setOrderBy] = useState("kills");
-  const [dense, setDense] = useState(false);
   const [rows, setRows] = useState([]);
 
   const handleRequestSort = (event, property) => {
@@ -120,17 +117,19 @@ export default function EnhancedTable() {
     setOrderBy(property);
   };
 
-  const handleChangeDense = (event) => {
-    setDense(event.target.checked);
-  };
-
-  useEffect(() => {
+  const getAndSetData = (event) => {
     getPlayerData().then((player) => {
       const currentRows = [];
+      const topKiller = player.reduce((prev, curr) =>
+        JSON.parse(curr.stats).kills > JSON.parse(prev.stats).kills
+          ? curr
+          : prev
+      );
+      console.log(topKiller);
       player.forEach((p) => {
         if (p.name !== "FLUX") {
           currentRows.push({
-            name: p.name,
+            name: p.name === topKiller.name ? ` ${p.name} 👑` : p.name,
             kills: JSON.parse(p.stats).kills,
             survived: JSON.parse(p.stats).hours,
             health: JSON.parse(p.health).health,
@@ -140,24 +139,23 @@ export default function EnhancedTable() {
         }
       });
       setRows(currentRows);
-      console.log(player);
       console.log("Table loaded.");
     });
+  };
+
+  useEffect(() => {
+    getAndSetData();
   }, []);
 
   return (
     <Box sx={{ width: "100%" }}>
-      <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
-      />
       <Paper sx={{ width: "100%", mb: 2 }}>
         <TableContainer sx={{ maxHeight: "80vh" }}>
           <Table
             stickyHeader
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
-            size={dense ? "small" : "medium"}
+            size={"small"}
           >
             <EnhancedTableHead
               order={order}
