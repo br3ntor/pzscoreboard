@@ -125,7 +125,6 @@ export default function EnhancedTable() {
           ? curr
           : prev
       );
-      console.log(topKiller);
       player.forEach((p) => {
         if (p.name !== "FLUX") {
           currentRows.push({
