@@ -10,8 +10,8 @@ import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Paper from "@mui/material/Paper";
 
-async function getPlayerData() {
-  const data = await fetch(process.env.REACT_APP_PZAPI);
+async function getPlayerData(server) {
+  const data = await fetch(process.env.REACT_APP_PZAPI + server);
   return data.json();
 }
 
@@ -106,7 +106,7 @@ EnhancedTableHead.propTypes = {
   orderBy: PropTypes.string.isRequired,
 };
 
-export default function EnhancedTable() {
+export default function EnhancedTable({ server }) {
   const [order, setOrder] = useState("desc");
   const [orderBy, setOrderBy] = useState("kills");
   const [rows, setRows] = useState([]);
@@ -117,8 +117,8 @@ export default function EnhancedTable() {
     setOrderBy(property);
   };
 
-  const getAndSetData = (event) => {
-    getPlayerData().then((player) => {
+  const getAndSetData = (whichServer) => {
+    getPlayerData(whichServer).then((player) => {
       const currentRows = [];
       const topKiller = player.reduce((prev, curr) =>
         JSON.parse(curr.stats).kills > JSON.parse(prev.stats).kills
@@ -143,8 +143,8 @@ export default function EnhancedTable() {
   };
 
   useEffect(() => {
-    getAndSetData();
-  }, []);
+    getAndSetData(server);
+  }, [server]);
 
   return (
     <Box sx={{ width: "100%" }}>
