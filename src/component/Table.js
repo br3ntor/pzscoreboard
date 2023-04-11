@@ -165,6 +165,7 @@ export default function EnhancedTable({ server }) {
               {rows
                 .slice()
                 .sort(getComparator(order, orderBy))
+                .slice(0, 30)
                 .map((row, index) => {
                   return (
                     <TableRow hover tabIndex={-1} key={row.name}>
