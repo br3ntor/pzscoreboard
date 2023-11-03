@@ -10,8 +10,8 @@ import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Paper from "@mui/material/Paper";
 
-async function getPlayerData(server) {
-  const data = await fetch(process.env.REACT_APP_PZAPI + server);
+async function getPlayerData() {
+  const data = await fetch(process.env.REACT_APP_PZAPI);
   return data.json();
 }
 
@@ -123,7 +123,7 @@ export default function EnhancedTable({ server }) {
       const topKiller = player.reduce((prev, curr) =>
         JSON.parse(curr.stats).kills > JSON.parse(prev.stats).kills
           ? curr
-          : prev
+          : prev,
       );
       player.forEach((p) => {
         if (p.name !== "FLUX") {
@@ -148,7 +148,7 @@ export default function EnhancedTable({ server }) {
 
   return (
     <Box sx={{ width: "100%" }}>
-      <Paper sx={{ width: "100%", mb: 2 }}>
+      <Paper sx={{ width: "100%", mb: 0 }}>
         <TableContainer sx={{ maxHeight: "80vh" }}>
           <Table
             stickyHeader
